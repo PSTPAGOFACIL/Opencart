@@ -44,9 +44,8 @@
                 <span data-toggle="tooltip" title="{{ help_test_mode }}"></span>{{ entry_test_mode }}</label>
               <div class="col-sm-5">
                 <select class="form-control" name="payment_pagofacil_environment" id="payment_pagofacil_environment">
-                  <option value="DESARROLLO" {{ (payment_pagofacil_environment == 'DESARROLLO') ? 'selected' : '' }}>Desarrollo</option>
-                  <option value="BETA" {{ (payment_pagofacil_environment == 'BETA') ? 'selected' : '' }}>Beta</option>
-                  <option value="PRODUCCION" {{ (payment_pagofacil_environment == 'PRODUCCION') ? 'selected' : '' }}>Producción</option>
+                  <option value="{{ DEVELOPMENT }}" {{ (payment_pagofacil_environment == DEVELOPMENT) ? 'selected' : '' }}>Desarrollo</option>
+                  <option value="{{ PRODUCTION }}" {{ (payment_pagofacil_environment == PRODUCTION) ? 'selected' : '' }}>Producción</option>
                 </select>
               </div>
             </div>
@@ -93,6 +92,29 @@
             </div>
           </div>
 
+          
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="payment_pagofacil_opt">
+              <span data-toggle="tooltip" title="{{ text_help_payment_options }}"></span>
+              {{ text_payment_options }}
+            </label>
+            <div class="col-sm-5">
+              {% if error_payment_options %}
+                <div class="text-danger">{{ error_payment_options }}</div>
+              {% endif %}
+                <div class="loader" style="display: none">Loading...</div>
+                <ul class="list-group" id="payment_pagofacil_opt_list">
+                  {% if payment_options %}
+                    {% for payment_option in payment_options %}
+                        <li><img class='pagofacil_opt_logo' src="{{ payment_option.url_imagen }}" alt="{{ payment_option.codigo }}" /><span class='pagofacil_opt_name' >{{ payment_option.nombre }}</span></li>
+                        <input id="{{payment_option.setting_key}}" name="{{payment_option.setting_key}}" type="hidden" value="0">
+                    {% endfor %}
+                  {% endif %}
+                </ul>
+                <button id="refresh_payment_pagofacil_opt" type="button" class="btn btn-primary">{{ text_update_button }}</button>
+            </div>
+          </div>
+
 
 
         </form>
@@ -129,9 +151,112 @@
   .table-borderless > thead > tr > th {
     border: none;
   }
+  .pagofacil_opt_logo {
+    width: 50px;
+    height: 50px;
+  }
+  .pagofacil_opt_name {
+    padding-left: 10px;
+  }
+  #payment_pagofacil_opt_list li {
+     list-style-type: none;
+  }
 
+</style>
+
+<!--spinner-->
+<style>
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+.loader {
+  margin: 5px 5px;
+  font-size: 5px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(0, 0, 0, 0.2);
+  border-right: 1.1em solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1.1em solid rgba(0, 0, 0, 0.2);
+  border-left: 1.1em solid #c4baba;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
 </style>
 
 
 <!-- Script para limpiar parametros -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" charset="utf-8"></script>
+
+
+<!-- Script para actualizar metodos de pago -->
+<script>
+$(function(){
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+
+    $("#refresh_payment_pagofacil_opt").click(function() {
+      var token_service = $("input[name='payment_pagofacil_token_service']").val();
+      var environment = $("#payment_pagofacil_environment").children("option:selected").val();
+      var user_token = getUrlParameter('user_token');
+      $('.loader').show();
+      $("#payment_pagofacil_opt_list").empty();
+      $.get( "/admin/index.php?route=extension/payment/pagofacil/payment_methods", {
+              user_token: user_token, 
+              token_service: token_service, 
+              environment: environment
+              } 
+        ).done(function( data ) {
+          for (var i = 0; i < data.length; i++) {
+            $("#payment_pagofacil_opt_list").append("<li><img class='pagofacil_opt_logo' src=\""+ data[i]["url_imagen"]  +"\" alt=\""+ data[i]["codigo"] +"\" /><span class='pagofacil_opt_name' >"+ data[i]["nombre"]  +"</span></li>")
+            var setting_key = data[i]["setting_key"]; 
+            $("#payment_pagofacil_opt_list").append("<input id='"+ setting_key +"' name='"+ setting_key +"' type='hidden' value='0'>");
+          }          
+        }).fail(function(err) {
+          console.log(err);
+          $("#payment_pagofacil_opt_list").append("<li>{{ error_update_payment_options }}</li>")
+        }).always(function() {
+            $('.loader').hide();
+        });
+      });
+      
+    });
+
+</script>
