@@ -1,47 +1,35 @@
 <?php
-
-
 class ModelExtensionPaymentPagofacil extends Model
 {
-    
-    /**
-     * Obtiene datos del metodo de pago. Como pagofacil no es un metodo de pago retorna un arraglo vacio.
-     */
     public function getMethod($address, $total)
     {
-        return array();
-    }
+        $this->load->language('extension/payment/pagofacil');
 
-    /**
-     * guarda opciones de pago pagofacil como extensiones de metodos de pago.
-     */
-    public function insert_payment_methods() {
-        //obtiene metodos de pago desde la base de datos.
-        $store_id = 0;
-        $sql = "SELECT `codigo` FROM `" . DB_PREFIX . "pagofacil_paymentoptions` WHERE `store_id` =" . (int)$store_id;
-        $query = $this->db->query($sql);
-        foreach ($query->rows as $result) {
-            $code = strtolower($result['codigo']);
-            $type = 'payment';
-            $extensions = $this->getInstalled($type);
-            if (!in_array($code, $extensions)) {
-                $sql = "INSERT INTO `" . DB_PREFIX . "extension` SET `type` = '" . $this->db->escape($type) . "', `code` = '" . $this->db->escape($code) . "'";
-                $this->db->query($sql);
-            }
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_pagofacil_geo_zone') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+
+        if ($this->config->get('payment_pagofacil_total') > $total) {
+            $status = false;
+        } elseif (!$this->config->get('payment_pagofacil_geo_zone')) {
+            $status = true;
+        } elseif ($query->num_rows) {
+            $status = true;
+        } else {
+            $status = false;
         }
-    }
 
-    /**
-     * trae extensiones instaldas
-     */
-    public function getInstalled($type) {
-		$extension_data = array();
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension` WHERE `type` = '" . $this->db->escape($type) . "' ORDER BY `code`");
+        // die('here');
 
-		foreach ($query->rows as $result) {
-			$extension_data[] = $result['code'];
+        $method_data = array();
+
+        if ($status) {
+            $method_data = array(
+        'code'       => 'pagofacil',
+        'title'      => $this->language->get('text_title'),
+        'terms'      => '',
+        'sort_order' => $this->config->get('payment_pagofacil_sort_order')
+      );
         }
-		return $extension_data;
-    }
 
+        return $method_data;
+    }
 }

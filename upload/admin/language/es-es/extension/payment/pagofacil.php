@@ -45,7 +45,6 @@ $_['help_token_service'] = 'Token Service entregado por Pago Fácil';
 $_['error_permission']         = 'Advertencia: ¡No tienes permiso para modificar el motor de pago Pago Fácil!';
 $_['error_token_secret']      = '¡Se requiere el token secret';
 $_['error_token_service']      = '¡Se requiere el token service';
-$_['error_payment_options']      = 'Error al actualizar opciones de pago';
 
 
 // modal-content
@@ -104,9 +103,3 @@ $_['btn_params'] = 'Actualizar Par&aacute;metros';
 $_['btn_close'] = 'Cerrar';
 $_['btn_pdfmain'] = 'Crear Reporte';
 $_['button_pdfinfo'] = 'Crear PHP info';
-
-
-$_['text_help_payment_options'] = 'Carga opciones de pago. Despues de actualizar se require guardar.';
-$_['text_payment_options'] = 'Opciones de Pago:';
-$_['text_update_button'] = 'Actualizar';
-$_['error_update_payment_options'] = 'Error al actualizar opciones de pago.';

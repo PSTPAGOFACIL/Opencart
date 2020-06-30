@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'PagoFacilCore\\' => array($vendorDir . '/kdu/pagofacilcore/src'),
+    'PagoFacil\\lib\\' => array($vendorDir . '/pagofacil/php-sdk/classes'),
 );
