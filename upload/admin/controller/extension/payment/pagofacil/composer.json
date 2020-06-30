@@ -1,0 +1,21 @@
+{
+    "name": "pago-facil/opencart-pago-facil",
+    "description": "extension pagofacil para ecommerce opencart",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "KDU Ingeniería Limitada",
+            "email": "contacto@kdu.cl"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@ryu.kdu.cl:pagoFacil/pago-facil-core.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "kdu/pagofacilcore": "dev-master"
+    }
+}
