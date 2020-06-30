@@ -1,0 +1,62 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "dc86fb2a59d28f8055c033011121e925",
+    "packages": [
+        {
+            "name": "kdu/pagofacilcore",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@ryu.kdu.cl:pagoFacil/pago-facil-core.git",
+                "reference": "2d7390ab897e7b494ca15a3a7178e01e3a8d48de"
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PagoFacilCore\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "andres perez",
+                    "email": "aperez@kdu.cl"
+                }
+            ],
+            "description": "librerias integracion pago facil API PHP SDk",
+            "keywords": [
+                "core pagofacil",
+                "pagofacil php",
+                "pagofacil-sdk"
+            ],
+            "time": "2020-03-11T21:21:50+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "kdu/pagofacilcore": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.4.0"
+    },
+    "platform-dev": []
+}
