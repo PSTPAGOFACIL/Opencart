@@ -26,5 +26,5 @@
 6) Add the "Token Service" and "Token Secret" that provides Pago Fácil
 7) Enable the extension
 8) Click on the save button
-
+9) Go to Extension > Modificactions section and click on the "refresh" button
 Once these steps are completed, you can use the payment method with Pago Fácil.
